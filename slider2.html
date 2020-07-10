@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<script src="jquery-2.2.3.min.js"></script>
+		<title></title>
+	</head>
+
+	<style type="text/css">
+		* {
+			margin: 0;
+			padding: 0;
+		}
+		
+		* {
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;/*使页面无法被选中*/
+		}
+		
+		.ss-slider {
+			background-color: red;
+			position: absolute;
+			left: 45px;
+			color: white;
+			font-size: smaller;
+			text-align: center;
+			cursor: pointer;
+			border-radius: 4px;
+		}
+		
+		.ss-wattle {
+			/*width: 30px;
+			height: 300px;*/
+			background-color: #93C763;
+			margin: 50px;
+			border-radius: 8px;
+		}
+		
+		.ss-label{
+			position: absolute;
+			top:0;
+			left:50px;
+			width: 30px;
+			height: 50px;
+			text-align: center;
+			cursor:default;
+		}
+		
+		/*.ss-slider:hover {
+			background-color: #1B5A95;
+		}
+		
+		.ss-wattle:hover {
+			background-color: #31B0D5;
+		}*/
+	</style>
+
+	<body>
+
+		<div class="ss" style="position: absolute; left: 200px; top: 100px; border: 2px solid #000000; z-index: 999;">
+
+			<!--  这个ondragstart属性很重要，	非常重要，关系到拖拽时鼠标事件的灵敏性  -->
+			<div class="ss-wattle" ondragstart="return false"></div>
+
+			<div class="ss-slider" ondragstart="return false"></div>
+			
+			<div class="ss-label"  ondragstart="return false"></div>
+
+		</div>
+
+		<script type="text/javascript">
+			(function(document) {
+
+				/**
+				 * 
+				 * @param {Object} s_width    轴宽
+				 * @param {Object} s_height   轴高
+				 */
+				$.fn.SS = function(ss_w_width,ss_w_height,min,max) {
+					
+					var ss_s_width = ss_w_width*(4/3);   //滑块宽
+					var ss_s_height = 15;                //滑块高
+					var ss_margin = 50;                  // ss 边距
+					var ss_s_position = ss_w_height/2+ss_margin;
+					var ss_s_value = Math.round((ss_s_position-ss_margin)/ss_w_height*(max-min)+min);
+					
+					$('.ss-label').append("温度");
+					$('.ss-wattle').width(ss_w_width);
+					$('.ss-wattle').height(ss_w_height);
+					$('.ss-slider').width(ss_s_width);
+					$('.ss-slider').height(ss_s_height);
+					$('.ss-wattle').css("margin", ss_margin);
+					$('.ss-slider').css("top", ss_s_position);
+					$('.ss-slider').text(ss_s_value);
+					
+					var M = false;  //鼠标状态
+					var Ry;     // 触发对象
+					var t = $(this);
+					t.mousedown(function(event) {
+							Ry = event.pageY - (parseInt(t.css("top")) || 0);
+							t.css("position", "absolute").fadeTo(20, 0.5); //点击改变鼠标状态，并且将div设置透明
+							M = true; // 鼠标处于激活状态
+					});
+					$(document).mouseup(function(event) { // 鼠标松开，
+							M = false; //  鼠标处于释放状态
+							t.fadeTo(20, 1); // 鼠标释放，将div透明度还原
+						});
+					$(document).mousemove(function(event) {
+						if(M) {
+							ss_s_position = (event.pageY - Ry)>=ss_margin?((event.pageY - Ry)<=ss_w_height+ss_margin-ss_s_height?(event.pageY - Ry):(ss_w_height+ss_margin-ss_s_height)):ss_margin;
+							ss_s_value = Math.round((ss_s_position-ss_margin)/ss_w_height*(max-min)+min);
+							t.css({
+								top: ss_s_position
+							});
+							t.text(ss_s_value);
+						}
+					});
+				}
+			})(document);
+
+			$(function() {
+				$('.ss-slider').SS(30,400,0,50);
+			})
+		</script>
+
+	</body>
+
+</html>
