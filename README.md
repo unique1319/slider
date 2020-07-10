@@ -9,7 +9,7 @@
 这个猫模狗样的东西不是项目的好帮手，但它可以是一个入门学习的好（拙劣）DEMO
 
 ## 示例 ##
-### [Demo](https://unique1319.github.io/slider) ###
+### [Demo](https://unique1319.github.io/slider/slider) ###
 
 ## 参数说明 ##
 ```
